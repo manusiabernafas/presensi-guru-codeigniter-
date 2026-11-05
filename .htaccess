@@ -1,0 +1,9 @@
+# Untuk XAMPP/Laragon: folder proyek diletakkan langsung di htdocs.
+# Semua permintaan diarahkan ke folder public/ sehingga .env, app/, dan writable/ tidak bisa dibuka dari browser.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+<IfModule !mod_rewrite.c>
+    Require all denied
+</IfModule>

@@ -1,0 +1,47 @@
+Aplikasi kehadiran guru dan manajemen ekstrakurikuler sekolah berbasis CodeIgniter 4 dan MySQL. Guru absen dengan scan QR di layar kiosk gerbang yang kodenya berganti tiap 30 detik, atau dengan lokasi GPS dalam radius sekolah. Izin, sakit, dan dinas luar diajukan dari HP lengkap dengan lampiran, lalu disetujui admin. Pembina ekskul mengisi presensi latihan, nilai rapor, dan prestasi lomba, sementara admin memantau dasbor harian dan mencetak rekap bulanan.
+Cara kerja
+Layar kiosk menampilkan QR dan kode 6 angka yang dibuat dengan HMAC dari waktu (jendela 30 detik), sehingga foto QR tidak bisa dipakai lagi di kemudian waktu. Guru cukup memindai QR dengan kamera HP biasa: tautan membuka halaman konfirmasi, lalu tombol Absen mencatat masuk atau pulang. Status tepat waktu atau terlambat dihitung dari jam masuk ditambah toleransi, dan absen otomatis ditolak pada hari yang bukan hari kerja atau terdaftar sebagai hari libur. Absen lokasi menghitung jarak ke koordinat sekolah dengan rumus haversine dan menolak bila di luar radius.
+
+Pengajuan izin, sakit, atau dinas luar disimpan beserta lampirannya di folder privat. Saat admin menyetujui, presensi pada setiap hari kerja dalam rentang tanggal terisi otomatis tanpa menimpa hari yang sudah hadir. Admin juga bisa mengoreksi presensi secara manual. Rekap bulanan disusun sebagai matriks guru per tanggal dengan kode H, T, I, S, D, A, dan L, menghitung persentase kehadiran, lalu bisa diunduh CSV atau dicetak.
+
+Modul ekstrakurikuler menyimpan anggota per ekskul, pertemuan dan presensi siswa (H/I/S/A), nilai rapor per tahun ajaran dan semester dengan saran otomatis dari persentase kehadiran, serta prestasi lomba. Pembina hanya dapat mengelola ekskul binaannya karena kepemilikan dicek di setiap aksi server.
+Fitur
+CodeIgniter 4.7 + MySQL, migrasi & seeder lengkap, setup.bat/setup.sh sekali klik (database dibuat otomatis)
+Layar kiosk QR untuk TV/laptop di gerbang: QR + kode 6 angka berganti tiap 30 detik, jam besar, daftar guru yang baru absen
+Absen masuk/pulang cukup scan QR dengan kamera HP, tanpa aplikasi tambahan
+Alternatif ketik kode kiosk atau absen lokasi GPS dalam radius sekolah
+Status tepat waktu/terlambat otomatis dengan menit terlambat sesuai jam masuk + toleransi
+Hari kerja & hari libur: absen ditolak saat libur
+Pengajuan izin, sakit, dinas luar dari HP dengan lampiran (disimpan privat)
+Persetujuan admin otomatis mengisi presensi pada rentang tanggal
+Koreksi presensi manual oleh admin
+Dasbor harian: hadir, terlambat, izin, belum absen, grafik 10 hari kerja
+Rekap bulanan matriks guru × tanggal, persentase kehadiran, unduh CSV & cetak A4 dengan kop sekolah
+Ekskul: pembina, jadwal, anggota per kelas, presensi latihan dengan tombol cepat H/I/S/A
+Nilai rapor ekskul A/B/C/D + deskripsi, saran otomatis dari kehadiran, cetak lembar nilai
+Catatan prestasi lomba ekskul dari tingkat sekolah sampai internasional
+Data guru & staf, kelas, siswa + impor CSV dari Excel
+Pengaturan sekolah: logo, jam kerja, hari kerja, cara absen, koordinat & radius, tahun ajaran
+Keamanan: CSRF, password hash, pembatasan login, validasi berbahasa Indonesia, folder sensitif tertutup dari browser
+Responsif untuk HP guru, font Plus Jakarta Sans + Montserrat, tanpa CDN (jalan di jaringan lokal sekolah)
+Data contoh lengkap: 24 guru, 6 kelas, 180 siswa, 8 ekskul, presensi 45 hari
+Panduan instalasi
+Kebutuhan: PHP 8.2+ dengan ekstensi intl (XAMPP 8.2+ / Laragon), MySQL/MariaDB, dan Composer.
+
+Ekstrak ZIP lalu pindahkan folder presensi-guru-ekskul ke C:\xampp\htdocs\ (atau C:\laragon\www\).
+
+Aktifkan ekstensi intl: buka C:\xampp\php\php.ini, hapus tanda ; di depan extension=intl, simpan, lalu restart Apache.
+
+Nyalakan Apache dan MySQL di XAMPP Control Panel.
+
+Klik dua kali setup.bat (Linux/macOS: bash setup.sh). Script memasang dependensi Composer, membuat database presensi_guru, tabel, dan data contoh.
+
+Buka http://localhost/presensi-guru-ekskul lalu login:
+
+Admin / TU: admin / admin123
+Guru (pembina Pramuka & Paskibra): guru / guru123
+Di Pengaturan, isi nama sekolah, logo, jam masuk, hari kerja, dan koordinat sekolah. Lalu klik Buka layar kiosk QR di dasbor dan tampilkan di laptop/TV dekat gerbang.
+
+Guru login sekali di HP, lalu setiap hari cukup scan QR kiosk dan tekan Absen.
+
+Catatan: absen lokasi GPS memerlukan HTTPS (aturan browser). Di jaringan lokal gunakan QR/kode kiosk.
